@@ -28,10 +28,9 @@ function secure_boot_check() {
     # same on all distros
     secure_boot_var_file="/sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c"
     if [ ! -f "$secure_boot_var_file" ]; then
-        echo "Error: Secure Boot variable file not found. Failing secure boot check."
         SECURE_BOOT="N"
     fi
-    secureboot_efivar=$(od --address-radix=n --format=u1 $secure_boot_var_file | cut -c20-)
+    secureboot_efivar=$(od --address-radix=n --format=u1 $secure_boot_var_file 2>/dev/null | cut -c20-)
     if [[ $secureboot_efivar -ne 1 ]]; then
        #echo "Test Failed Secure Boot not enabled"
        SECURE_BOOT="N"
@@ -305,7 +304,6 @@ function run_tests() {
    vbios_check
    
    secure_boot_check
-   echo "secureboot passed"
    kernel_image_sig_check
    kernel_mod_sig_check
    # echo "GPU Verification Successful"
