@@ -1,0 +1,1 @@
+This is a release repository that the isntallation script pulls in and executes from, this actually contains the python file that batches the TasmanianDevil shell script's output and sends it to the AVS
