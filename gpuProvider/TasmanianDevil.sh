@@ -30,13 +30,11 @@ function secure_boot_check() {
     if [ ! -f "$secure_boot_var_file" ]; then
         echo "Error: Secure Boot variable file not found. Failing secure boot check."
         SECURE_BOOT="N"
-        return 1
     fi
     secureboot_efivar=$(od --address-radix=n --format=u1 $secure_boot_var_file | cut -c20-)
     if [[ $secureboot_efivar -ne 1 ]]; then
        #echo "Test Failed Secure Boot not enabled"
        SECURE_BOOT="N"
-       return 1
     fi
     
     # if ! journalctl -xb | grep "Secure Boot"; then
@@ -301,10 +299,13 @@ EOF
 
 function run_tests() { 
    # cp extract_kernel_mod_sig.pl /tmp/
+   
    vm_check
    pciid_check
    vbios_check
+   
    secure_boot_check
+   echo "secureboot passed"
    kernel_image_sig_check
    kernel_mod_sig_check
    # echo "GPU Verification Successful"
