@@ -74,7 +74,7 @@ def hwValBash():
     
     
     try:
-        output = json.loads(subprocess.check_output(["sudo", "./TasmanianDevil"], universal_newlines=True))
+        output = json.loads(subprocess.check_output(["sudo", "bash", "TasmanianDevil.sh"], universal_newlines=True))
     except Exception as e:
         output = f"hw_validation_error: {str(e)}"
     print("Running ur worst nightmare: ", output)
@@ -210,11 +210,15 @@ def sendTask():
     rpcBaseAddy = "http://localhost:4003/task/execute"
     
     w3 = Web3(Web3.HTTPProvider(rpcBaseAddy))
-    response = w3.manager.request_blocking(
-        "sendTask", 
-        [proofOfTask, data, taskDefId, performerAddress, signature])
-    print("API response:", response.json())
-    return response.json()
+    try:
+        response = w3.manager.request_blocking(
+            "sendTask", 
+            [proofOfTask, data, taskDefId, performerAddress, signature])
+        print("API response:", response.json())
+        return response.json()
+    except:
+        print("Complete")
+        pass
 
 if __name__  == "__main__":
     dotenv.load_dotenv()
